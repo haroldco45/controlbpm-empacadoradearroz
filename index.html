@@ -1,0 +1,1386 @@
+<!DOCTYPE html>
+<html lang="es-CO">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Control BPM — Empacadora de Arroz</title>
+<meta name="description" content="Sistema de control de Buenas Prácticas de Manufactura, inocuidad y trazabilidad para planta empacadora de arroz. Cumplimiento Resolución 2674 de 2013 (INVIMA).">
+<meta name="theme-color" content="#0B4F5C">
+
+<!-- ===== Open Graph (bloque completo) ===== -->
+<meta property="og:title" content="Control BPM — Empacadora de Arroz">
+<meta property="og:description" content="Registro diario de BPM, plan de saneamiento, control de proceso y trazabilidad por lote. Evidencia lista para visita del INVIMA.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://bpm-superarroz.netlify.app/">
+<meta property="og:site_name" content="Vibras Positivas HM">
+<meta property="og:locale" content="es_CO">
+<meta property="og:image" content="https://bpm-superarroz.netlify.app/og-image.png">
+<meta property="og:image:secure_url" content="https://bpm-superarroz.netlify.app/og-image.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Control BPM para empacadora de arroz — Vibras Positivas HM">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Control BPM — Empacadora de Arroz">
+<meta name="twitter:description" content="Registro diario de BPM, saneamiento, proceso y trazabilidad por lote.">
+<meta name="twitter:image" content="https://bpm-superarroz.netlify.app/og-image.png">
+
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --tinta:#14181A; --tinta-2:#414B4E; --tinta-3:#6C787B;
+  --concreto:#E9EDEC; --panel:#FFFFFF; --linea:#D2D9D8;
+  --petroleo:#0B4F5C; --petroleo-osc:#083C46; --petroleo-cl:#E2EFF1;
+  --verde:#0F6B4F; --verde-cl:#E3F2EC;
+  --ambar:#B4700B; --ambar-cl:#FBF0DC;
+  --rojo:#A82018; --rojo-cl:#FBE7E5;
+  --r:10px; --sombra:0 1px 2px rgba(20,24,26,.08), 0 4px 14px rgba(20,24,26,.05);
+  --mono:'IBM Plex Mono',ui-monospace,monospace;
+  --cond:'Barlow Condensed',system-ui,sans-serif;
+  --body:'Barlow',system-ui,-apple-system,sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  font-family:var(--body); background:var(--concreto); color:var(--tinta);
+  font-size:16px; line-height:1.45; padding-bottom:env(safe-area-inset-bottom);
+}
+button,input,select,textarea{font-family:inherit;font-size:16px}
+
+/* ---------- Cinta de lote (elemento firma) ---------- */
+.cinta{
+  background:var(--tinta); color:#9EDDE8; font-family:var(--mono); font-size:11px;
+  letter-spacing:.18em; padding:5px 14px; display:flex; justify-content:space-between;
+  gap:10px; overflow:hidden; white-space:nowrap;
+}
+.cinta span{opacity:.85}
+
+/* ---------- Barra superior ---------- */
+.barra{
+  background:var(--petroleo); color:#fff; padding:12px 14px;
+  display:flex; align-items:center; gap:12px; position:sticky; top:0; z-index:50;
+  box-shadow:0 2px 10px rgba(8,60,70,.25);
+}
+.barra h1{
+  font-family:var(--cond); font-weight:700; font-size:19px; letter-spacing:.04em;
+  text-transform:uppercase; margin:0; line-height:1.1; flex:1;
+}
+.barra .sub{display:block;font-family:var(--body);font-size:11px;font-weight:500;
+  letter-spacing:.06em;text-transform:none;opacity:.75}
+.btn-atras{
+  background:rgba(255,255,255,.14); border:0; color:#fff; width:38px; height:38px;
+  border-radius:9px; font-size:20px; cursor:pointer; flex-shrink:0; line-height:1;
+}
+.btn-atras:hover{background:rgba(255,255,255,.25)}
+
+.envoltura{max-width:900px;margin:0 auto;padding:16px 14px 60px}
+
+/* ---------- Tipografía de sección ---------- */
+.rotulo{
+  font-family:var(--cond); font-size:12px; font-weight:600; letter-spacing:.16em;
+  text-transform:uppercase; color:var(--tinta-3); margin:26px 0 10px;
+  display:flex; align-items:center; gap:10px;
+}
+.rotulo::after{content:'';flex:1;height:1px;background:var(--linea)}
+.rotulo:first-child{margin-top:6px}
+
+/* ---------- Tarjetas ---------- */
+.panel{background:var(--panel);border:1px solid var(--linea);border-radius:var(--r);
+  box-shadow:var(--sombra);padding:16px;margin-bottom:14px}
+.panel h2{font-family:var(--cond);font-size:20px;font-weight:700;letter-spacing:.03em;
+  text-transform:uppercase;margin:0 0 4px}
+.panel p.nota{margin:0 0 14px;font-size:13.5px;color:var(--tinta-2)}
+
+/* ---------- Rejilla de módulos ---------- */
+.rejilla{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.mod{
+  background:var(--panel); border:1px solid var(--linea); border-radius:var(--r);
+  padding:14px 13px; text-align:left; cursor:pointer; box-shadow:var(--sombra);
+  display:flex; flex-direction:column; gap:6px; min-height:104px; position:relative;
+  transition:transform .12s ease, border-color .12s ease;
+}
+.mod:hover{transform:translateY(-2px);border-color:var(--petroleo)}
+.mod:focus-visible{outline:3px solid var(--petroleo);outline-offset:2px}
+.mod .ic{font-size:22px;line-height:1}
+.mod .tt{font-family:var(--cond);font-size:16.5px;font-weight:700;letter-spacing:.02em;
+  text-transform:uppercase;line-height:1.12}
+.mod .ds{font-size:12px;color:var(--tinta-3);line-height:1.3;margin-top:auto}
+.mod .marca{position:absolute;top:10px;right:10px;font-family:var(--mono);font-size:10px;
+  font-weight:600;padding:2px 6px;border-radius:20px}
+.marca.ok{background:var(--verde-cl);color:var(--verde)}
+.marca.pend{background:var(--ambar-cl);color:var(--ambar)}
+
+/* ---------- Medidor del día ---------- */
+.medidor{background:var(--panel);border:1px solid var(--linea);border-radius:var(--r);
+  padding:16px;box-shadow:var(--sombra);margin-bottom:6px}
+.medidor .cifra{font-family:var(--cond);font-size:44px;font-weight:700;line-height:.95;
+  letter-spacing:-.01em}
+.medidor .cifra small{font-size:18px;font-weight:600;color:var(--tinta-3)}
+.riel{height:8px;background:var(--concreto);border-radius:20px;overflow:hidden;margin-top:12px}
+.riel i{display:block;height:100%;background:var(--verde);border-radius:20px;transition:width .5s}
+.riel i.bajo{background:var(--rojo)} .riel i.medio{background:var(--ambar)}
+
+/* ---------- Alertas ---------- */
+.alerta{display:flex;gap:11px;padding:11px 13px;border-radius:9px;margin-bottom:8px;
+  font-size:14px;align-items:flex-start;border-left:4px solid}
+.alerta.rojo{background:var(--rojo-cl);border-color:var(--rojo);color:#5E1610}
+.alerta.ambar{background:var(--ambar-cl);border-color:var(--ambar);color:#5C3A05}
+.alerta.verde{background:var(--verde-cl);border-color:var(--verde);color:#0A4231}
+.alerta b{font-weight:700}
+
+/* ---------- Formularios ---------- */
+.campo{margin-bottom:14px}
+.campo label{display:block;font-family:var(--cond);font-size:13.5px;font-weight:600;
+  letter-spacing:.06em;text-transform:uppercase;color:var(--tinta-2);margin-bottom:5px}
+.campo .ayuda{font-size:12px;color:var(--tinta-3);margin:-2px 0 6px;text-transform:none;
+  font-family:var(--body);letter-spacing:0;font-weight:400}
+.campo input,.campo select,.campo textarea{
+  width:100%;padding:11px 12px;border:1.5px solid var(--linea);border-radius:8px;
+  background:#fff;color:var(--tinta);
+}
+.campo input:focus,.campo select:focus,.campo textarea:focus{
+  outline:0;border-color:var(--petroleo);box-shadow:0 0 0 3px var(--petroleo-cl)}
+.campo textarea{min-height:72px;resize:vertical}
+.campo input[type=number],.campo input[type=date],.campo input[type=time]{font-family:var(--mono)}
+.dos{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:520px){.dos{grid-template-columns:1fr}}
+
+/* ---------- Checklist ---------- */
+.chk{border:1px solid var(--linea);border-radius:9px;overflow:hidden;margin-bottom:14px}
+.chk-fila{display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid var(--linea)}
+.chk-fila:last-child{border-bottom:0}
+.chk-fila:nth-child(odd){background:#FAFBFB}
+.chk-fila .txt{flex:1;font-size:14px;line-height:1.32}
+.chk-fila .txt i{display:block;font-style:normal;font-size:11.5px;color:var(--tinta-3);
+  font-family:var(--mono)}
+.tri{display:flex;gap:3px;flex-shrink:0}
+.tri button{
+  border:1.5px solid var(--linea);background:#fff;color:var(--tinta-3);width:38px;height:36px;
+  font-family:var(--cond);font-weight:700;font-size:13px;letter-spacing:.05em;cursor:pointer;
+}
+.tri button:first-child{border-radius:8px 0 0 8px} .tri button:last-child{border-radius:0 8px 8px 0}
+.tri button+button{border-left:0}
+.tri button[data-on="C"]{background:var(--verde);border-color:var(--verde);color:#fff}
+.tri button[data-on="N"]{background:var(--rojo);border-color:var(--rojo);color:#fff}
+.tri button[data-on="X"]{background:var(--tinta-3);border-color:var(--tinta-3);color:#fff}
+
+/* ---------- Botones ---------- */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:13px 20px;border:0;border-radius:9px;font-family:var(--cond);font-weight:700;
+  font-size:16px;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;
+}
+.btn-p{background:var(--petroleo);color:#fff} .btn-p:hover{background:var(--petroleo-osc)}
+.btn-s{background:#fff;color:var(--tinta);border:1.5px solid var(--linea)}
+.btn-s:hover{border-color:var(--petroleo);color:var(--petroleo)}
+.btn-d{background:var(--rojo);color:#fff}
+.btn-full{width:100%}
+.acciones{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+.btn:focus-visible{outline:3px solid var(--tinta);outline-offset:2px}
+
+/* ---------- Registros ---------- */
+.reg{border:1px solid var(--linea);border-radius:9px;padding:12px 13px;margin-bottom:9px;
+  background:#fff;box-shadow:var(--sombra)}
+.reg-top{display:flex;justify-content:space-between;gap:10px;align-items:baseline;margin-bottom:4px}
+.reg-cod{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--petroleo)}
+.reg-fec{font-family:var(--mono);font-size:11.5px;color:var(--tinta-3)}
+.reg-det{font-size:13.5px;color:var(--tinta-2)}
+.vacio{text-align:center;padding:30px 16px;color:var(--tinta-3);font-size:14px;
+  border:1.5px dashed var(--linea);border-radius:9px;background:#fff}
+.vacio b{display:block;font-family:var(--cond);font-size:17px;text-transform:uppercase;
+  letter-spacing:.05em;color:var(--tinta-2);margin-bottom:4px}
+
+.pill{display:inline-block;font-family:var(--mono);font-size:10.5px;font-weight:600;
+  padding:2px 8px;border-radius:20px;letter-spacing:.04em}
+.pill.ok{background:var(--verde-cl);color:var(--verde)}
+.pill.no{background:var(--rojo-cl);color:var(--rojo)}
+.pill.esp{background:var(--ambar-cl);color:var(--ambar)}
+
+/* ---------- Ficha de saco (firma visual de trazabilidad) ---------- */
+.saco{
+  background:#FBF7EE; border:2px solid var(--tinta); border-radius:4px; padding:18px 16px;
+  position:relative; margin-bottom:14px;
+  background-image:repeating-linear-gradient(90deg,rgba(20,24,26,.028) 0 1px,transparent 1px 5px);
+}
+.saco .estampa{
+  font-family:var(--mono); font-size:19px; font-weight:600; letter-spacing:.12em;
+  color:var(--tinta); border:1.5px dashed var(--tinta-2); display:inline-block;
+  padding:5px 12px; transform:rotate(-1.2deg); background:rgba(255,255,255,.5);
+}
+.saco .lin{display:flex;justify-content:space-between;gap:12px;font-size:13.5px;
+  padding:7px 0;border-bottom:1px dotted rgba(20,24,26,.22)}
+.saco .lin:last-child{border-bottom:0}
+.saco .lin b{font-family:var(--cond);text-transform:uppercase;letter-spacing:.07em;
+  font-size:12.5px;color:var(--tinta-2);font-weight:600}
+.saco .lin span{font-family:var(--mono);font-size:12.5px;text-align:right}
+
+/* ---------- Aviso Habeas Data ---------- */
+.habeas{background:var(--petroleo-cl);border:1px solid #B9D9DE;border-radius:9px;
+  padding:11px 13px;font-size:12.5px;color:#0A414B;margin-bottom:14px;line-height:1.45}
+.habeas b{font-family:var(--cond);letter-spacing:.06em;text-transform:uppercase;font-size:12px}
+
+/* ---------- Pie ---------- */
+.pie{text-align:center;padding:26px 14px 34px;font-size:11.5px;color:var(--tinta-3);
+  border-top:1px solid var(--linea);margin-top:26px;font-family:var(--mono);
+  letter-spacing:.04em;line-height:1.7}
+
+/* ---------- Aviso emergente ---------- */
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(120%);
+  background:var(--tinta);color:#fff;padding:12px 20px;border-radius:9px;font-size:14px;
+  font-weight:500;z-index:99;transition:transform .28s ease;max-width:90%;text-align:center;
+  box-shadow:0 8px 26px rgba(0,0,0,.28)}
+.toast.ver{transform:translateX(-50%) translateY(0)}
+
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* ---------- Impresión ---------- */
+@media print{
+  .barra,.cinta,.acciones,.btn,.toast,.no-print{display:none!important}
+  body{background:#fff} .panel,.reg,.saco{box-shadow:none;page-break-inside:avoid}
+  .envoltura{max-width:100%;padding:0}
+  .pie{display:block!important}
+}
+</style>
+</head>
+<body>
+
+<div class="cinta">
+  <span id="cintaIzq">LOTE — · —</span>
+  <span id="cintaDer">CARGANDO…</span>
+</div>
+
+<header class="barra">
+  <button class="btn-atras" id="btnAtras" aria-label="Volver al inicio" style="display:none">←</button>
+  <h1 id="tituloBarra">Control BPM<span class="sub" id="subBarra">Empacadora de arroz</span></h1>
+</header>
+
+<main class="envoltura" id="app"></main>
+
+<footer class="pie">
+  Desarrollada por Vibras Positivas HM — Derechos de Autor Reservados
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   CONTROL BPM — EMPACADORA DE ARROZ
+   Vibras Positivas HM · Res. 2674/2013 · Res. 683/2012 · Res. 2115/2007
+   ============================================================ */
+
+/* ---------- Almacenamiento (localStorage con respaldo en memoria) ---------- */
+const Alm = (()=>{
+  let mem = {}, usaLS = true;
+  try { localStorage.setItem('__t','1'); localStorage.removeItem('__t'); }
+  catch(e){ usaLS = false; }
+  return {
+    leer(k){ try{ return usaLS ? localStorage.getItem(k) : (mem[k]??null); }catch(e){ return mem[k]??null; } },
+    guardar(k,v){ try{ usaLS ? localStorage.setItem(k,v) : (mem[k]=v); }catch(e){ mem[k]=v; } },
+    persistente: usaLS
+  };
+})();
+
+const CLAVE = 'bpmArroz_v1';
+let D = null;
+
+const BASE = {
+  cfg:{ empresa:'', nit:'', planta:'', marca:'', responsable:'',
+        presentaciones:[
+          {nombre:'Libra (500 g)', gramos:500, tol:1.5},
+          {nombre:'Arroba (12.5 kg)', gramos:12500, tol:1.0},
+          {nombre:'Bulto (50 kg)', gramos:50000, tol:0.8}
+        ] },
+  consec:{ nc:0, lote:0 },
+  manipuladores:[], preop:[], higiene:[], ld:[], plagas:[], agua:[], residuos:[],
+  mp:[], insumo:[], produccion:[], nc:[]
+};
+
+function cargar(){
+  const raw = Alm.leer(CLAVE);
+  if(raw){ try{ D = Object.assign(JSON.parse(JSON.stringify(BASE)), JSON.parse(raw)); }
+           catch(e){ D = JSON.parse(JSON.stringify(BASE)); } }
+  else D = JSON.parse(JSON.stringify(BASE));
+}
+function salvar(){ Alm.guardar(CLAVE, JSON.stringify(D)); }
+
+/* ---------- Fecha y hora de Colombia (UTC-5, America/Bogota) ---------- */
+function coAhora(){
+  const f = new Intl.DateTimeFormat('en-CA',{timeZone:'America/Bogota',
+    year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false});
+  const p = {}; f.formatToParts(new Date()).forEach(x=>p[x.type]=x.value);
+  return { fecha:`${p.year}-${p.month}-${p.day}`, hora:`${p.hour}:${p.minute}`,
+           dia:p.day, mes:p.month, anio:p.year, aa:p.year.slice(2) };
+}
+function coLargo(){
+  return new Intl.DateTimeFormat('es-CO',{timeZone:'America/Bogota',weekday:'long',
+    day:'numeric',month:'long',year:'numeric'}).format(new Date());
+}
+function hoy(){ return coAhora().fecha; }
+function fmtF(f){ if(!f) return '—'; const [a,m,d]=f.split('-'); return `${d}/${m}/${a}`; }
+function diasHasta(f){ if(!f) return null;
+  return Math.round((new Date(f+'T12:00:00') - new Date(hoy()+'T12:00:00'))/86400000); }
+
+/* ---------- Utilidades ---------- */
+const $ = s => document.querySelector(s);
+const esc = s => String(s??'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function aviso(t){ const e=$('#toast'); e.textContent=t; e.classList.add('ver');
+  clearTimeout(e._t); e._t=setTimeout(()=>e.classList.remove('ver'),2600); }
+function id(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
+function ocultarCed(c){ if(!c) return '—'; const s=String(c);
+  return s.length<=4 ? '••••' : '••••'+s.slice(-4); }
+
+/* ============================================================
+   CHECKLISTS NORMATIVOS
+   ============================================================ */
+const CHK_PREOP = [
+  ['Tolva, elevador y ductos libres de residuos del lote anterior','Res. 2674 Art. 9'],
+  ['Banda transportadora limpia, sin desgaste ni desprendimiento de material','Res. 2674 Art. 9'],
+  ['Selladora limpia y con temperatura estable','Res. 2674 Art. 9'],
+  ['Báscula verificada en cero y contra pesa patrón','Control de peso neto'],
+  ['Codificador imprime fecha y lote legibles','Trazabilidad'],
+  ['Pisos, paredes y techos sin polvo, humedad ni telarañas','Res. 2674 Art. 6'],
+  ['Luminarias funcionando y con protección contra estallido','Res. 2674 Art. 6'],
+  ['Mallas, rejillas y trampas de plagas completas y en su sitio','Res. 2674 Art. 29'],
+  ['Estibas sanas, sin astillas, separadas de pared y piso','Res. 2674 Art. 31'],
+  ['Sin químicos, lubricantes ni elementos ajenos en el área','Res. 2674 Art. 9'],
+  ['Lavamanos dotado: agua, jabón, desinfectante y toallas','Res. 2674 Art. 6'],
+  ['Sin vidrio ni plástico quebradizo en zona de empaque','Riesgo físico'],
+  ['Área demarcada y libre de producto no conforme','Res. 2674 Art. 6']
+];
+
+const CHK_HIGIENE = [
+  ['Uniforme completo, limpio y de color claro','Res. 2674 Art. 14'],
+  ['Cofia o gorro cubriendo totalmente el cabello','Res. 2674 Art. 14'],
+  ['Tapabocas puesto correctamente donde aplica','Res. 2674 Art. 14'],
+  ['Calzado cerrado, limpio y de uso exclusivo del área','Res. 2674 Art. 14'],
+  ['Sin joyas, reloj, aretes ni piercings','Res. 2674 Art. 14'],
+  ['Uñas cortas, limpias y sin esmalte','Res. 2674 Art. 14'],
+  ['Sin maquillaje ni perfume de olor fuerte','Res. 2674 Art. 14'],
+  ['Manos sin heridas, o cubiertas con protección impermeable','Res. 2674 Art. 13'],
+  ['Lavado de manos al ingresar y tras cada interrupción','Res. 2674 Art. 14'],
+  ['Declara no tener síntomas gastrointestinales ni respiratorios','Res. 2674 Art. 13'],
+  ['No come, bebe, fuma ni mastica dentro del área','Res. 2674 Art. 14']
+];
+
+const AREAS_LD = ['Tolva y elevador','Banda transportadora','Selladora','Básculas',
+  'Mesas y superficies','Pisos del área de empaque','Paredes y zócalos','Canecas de residuos',
+  'Baños y vestier','Lavamanos','Bodega de producto terminado','Estibas'];
+
+/* ============================================================
+   DEFINICIÓN DE MÓDULOS
+   ============================================================ */
+const MODULOS = {
+  preop:{ ic:'🔧', tt:'Alistamiento', ds:'Antes de arrancar la máquina', grupo:1, diario:true },
+  higiene:{ ic:'🧤', tt:'Higiene del personal', ds:'Dotación y estado de salud', grupo:1, diario:true },
+  mp:{ ic:'🌾', tt:'Recepción de arroz', ds:'Materia prima que entra', grupo:2 },
+  insumo:{ ic:'📦', tt:'Insumo de empaque', ds:'Bolsa y certificado sanitario', grupo:2 },
+  produccion:{ ic:'⚖️', tt:'Control de proceso', ds:'Lote, peso, sellado, código', grupo:2, diario:true },
+  ld:{ ic:'🧽', tt:'Limpieza y desinfección', ds:'Programa 1 de saneamiento', grupo:3, diario:true },
+  plagas:{ ic:'🐀', tt:'Control de plagas', ds:'Programa 2 de saneamiento', grupo:3 },
+  agua:{ ic:'💧', tt:'Agua potable', ds:'Programa 3 · cloro residual', grupo:3, diario:true },
+  residuos:{ ic:'🗑️', tt:'Residuos', ds:'Programa 4 de saneamiento', grupo:3, diario:true },
+  manipuladores:{ ic:'👷', tt:'Manipuladores', ds:'Certificados y capacitación', grupo:4 },
+  nc:{ ic:'⚠️', tt:'No conformidades', ds:'Hallazgos y acciones', grupo:4 },
+  traza:{ ic:'🔍', tt:'Trazabilidad', ds:'Buscar un lote completo', grupo:4 },
+  reportes:{ ic:'🖨️', tt:'Evidencia INVIMA', ds:'Imprimir y respaldar', grupo:4 },
+  config:{ ic:'⚙️', tt:'Configuración', ds:'Planta y presentaciones', grupo:4 }
+};
+const GRUPOS = {1:'Antes de arrancar el turno',2:'Durante el turno',3:'Plan de saneamiento',4:'Soporte permanente'};
+const DIARIOS = Object.keys(MODULOS).filter(k=>MODULOS[k].diario);
+
+/* ============================================================
+   ALERTAS
+   ============================================================ */
+function calcAlertas(){
+  const A = [];
+  D.manipuladores.filter(m=>m.activo!==false).forEach(m=>{
+    [['certMedico','Certificado médico'],['capacitacion','Capacitación en BPM'],['carne','Carné de manipulación']]
+    .forEach(([k,et])=>{
+      const v = m[k+'Vence'];
+      if(!v){ A.push({n:2,t:`${et} sin registrar`,d:m.nombre}); return; }
+      const dd = diasHasta(v);
+      if(dd < 0) A.push({n:1,t:`${et} VENCIDO hace ${Math.abs(dd)} días`,d:m.nombre});
+      else if(dd <= 30) A.push({n:2,t:`${et} vence en ${dd} días`,d:m.nombre});
+    });
+  });
+  D.insumo.forEach(r=>{
+    const dd = diasHasta(r.certVence);
+    if(r.certVence && dd < 0) A.push({n:1,t:'Certificado de aptitud sanitaria del empaque VENCIDO',d:`Lote bolsa ${r.loteBolsa||'—'} · ${r.proveedor||''}`});
+  });
+  D.nc.filter(n=>n.estado!=='Cerrada').forEach(n=>{
+    const dd = diasHasta(n.compromiso);
+    if(n.compromiso && dd < 0) A.push({n:1,t:`No conformidad ${n.cod} vencida hace ${Math.abs(dd)} días`,d:n.descripcion});
+    else A.push({n:2,t:`No conformidad ${n.cod} abierta`,d:n.descripcion});
+  });
+  const h = hoy();
+  DIARIOS.forEach(k=>{
+    if(!D[k].some(r=>r.fecha===h)) A.push({n:2,t:`Falta el registro de hoy: ${MODULOS[k].tt}`,d:'Pendiente del turno'});
+  });
+  const ultAgua = D.agua.filter(r=>r.fecha===h);
+  ultAgua.forEach(r=>{
+    const c = parseFloat(r.cloro);
+    if(!isNaN(c) && (c<0.3||c>2.0)) A.push({n:1,t:`Cloro residual fuera de rango: ${c} mg/L`,d:`${r.punto} · admisible 0,3 a 2,0 mg/L (Res. 2115/2007)`});
+  });
+  return A.sort((a,b)=>a.n-b.n);
+}
+
+/* ============================================================
+   NAVEGACIÓN
+   ============================================================ */
+let vista = 'inicio';
+function ir(v){ vista = v; window.scrollTo(0,0); pintar(); }
+
+function pintar(){
+  const t = coAhora();
+  $('#cintaDer').textContent = `${t.fecha.replace(/-/g,'')} · ${t.hora} COL`;
+  const ult = D.produccion[D.produccion.length-1];
+  $('#cintaIzq').textContent = ult ? `ÚLTIMO LOTE ${ult.lote}` : 'SIN LOTES REGISTRADOS';
+  const esInicio = vista==='inicio';
+  $('#btnAtras').style.display = esInicio ? 'none' : 'block';
+  $('#tituloBarra').innerHTML = esInicio
+    ? `Control BPM<span class="sub">${esc(D.cfg.planta||'Empacadora de arroz')}</span>`
+    : `${esc(MODULOS[vista]?.tt||vista)}<span class="sub">${esc(MODULOS[vista]?.ds||'')}</span>`;
+  const f = ({inicio:vInicio, preop:vPreop, higiene:vHigiene, ld:vLD, plagas:vPlagas,
+    agua:vAgua, residuos:vResiduos, mp:vMP, insumo:vInsumo, produccion:vProd,
+    manipuladores:vManip, nc:vNC, traza:vTraza, reportes:vReportes, config:vConfig})[vista] || vInicio;
+  $('#app').innerHTML = f();
+  if(vista==='produccion') pintarPesoNominal();
+  document.title = esInicio ? 'Control BPM — Empacadora de Arroz'
+                            : `${MODULOS[vista]?.tt||''} — Control BPM`;
+}
+$('#btnAtras').onclick = ()=>ir('inicio');
+
+/* ============================================================
+   VISTA: INICIO
+   ============================================================ */
+function vInicio(){
+  const h = hoy();
+  const hechos = DIARIOS.filter(k=>D[k].some(r=>r.fecha===h)).length;
+  const pct = Math.round(hechos/DIARIOS.length*100);
+  const cls = pct>=100?'':(pct>=50?'medio':'bajo');
+  const A = calcAlertas();
+  const rojas = A.filter(a=>a.n===1);
+
+  let html = `
+  <div class="medidor">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:14px">
+      <div>
+        <div class="rotulo" style="margin:0 0 6px">Cumplimiento de hoy</div>
+        <div class="cifra">${pct}<small>%</small></div>
+        <div style="font-size:13px;color:var(--tinta-2);margin-top:4px">
+          ${hechos} de ${DIARIOS.length} registros diarios completos</div>
+      </div>
+      <div style="text-align:right;font-size:12px;color:var(--tinta-3);line-height:1.5;max-width:44%">
+        <div style="font-family:var(--cond);text-transform:uppercase;letter-spacing:.08em;font-weight:600;color:var(--tinta-2)">${coLargo()}</div>
+        <div style="font-family:var(--mono);margin-top:3px">Hora Colombia ${coAhora().hora}</div>
+      </div>
+    </div>
+    <div class="riel"><i class="${cls}" style="width:${pct}%"></i></div>
+  </div>`;
+
+  if(A.length){
+    html += `<div class="rotulo">${rojas.length?`${rojas.length} alerta${rojas.length>1?'s':''} crítica${rojas.length>1?'s':''}`:'Pendientes'}</div>`;
+    A.slice(0,8).forEach(a=>{
+      html += `<div class="alerta ${a.n===1?'rojo':'ambar'}">
+        <span>${a.n===1?'⛔':'⏳'}</span>
+        <div><b>${esc(a.t)}</b><br><span style="opacity:.85">${esc(a.d)}</span></div></div>`;
+    });
+    if(A.length>8) html += `<div style="font-size:12.5px;color:var(--tinta-3);margin-bottom:6px">y ${A.length-8} pendiente(s) más.</div>`;
+  } else {
+    html += `<div class="rotulo">Estado</div>
+      <div class="alerta verde"><span>✅</span><div><b>Todo al día</b><br>
+      <span style="opacity:.85">No hay certificados vencidos, no conformidades abiertas ni registros faltantes.</span></div></div>`;
+  }
+
+  [1,2,3,4].forEach(g=>{
+    html += `<div class="rotulo">${GRUPOS[g]}</div><div class="rejilla">`;
+    Object.entries(MODULOS).filter(([,m])=>m.grupo===g).forEach(([k,m])=>{
+      let marca = '';
+      if(m.diario) marca = D[k].some(r=>r.fecha===h)
+        ? '<span class="marca ok">HOY ✓</span>' : '<span class="marca pend">PENDIENTE</span>';
+      html += `<button class="mod" onclick="ir('${k}')">${marca}
+        <span class="ic">${m.ic}</span>
+        <span class="tt">${m.tt}</span>
+        <span class="ds">${m.ds}</span></button>`;
+    });
+    html += `</div>`;
+  });
+
+  if(!Alm.persistente){
+    html += `<div class="alerta ambar" style="margin-top:18px"><span>ℹ️</span><div>
+      <b>Vista previa sin guardado</b><br><span style="opacity:.85">Este navegador tiene el almacenamiento bloqueado. Al publicar la app en Netlify los registros se guardan normalmente en el dispositivo.</span></div></div>`;
+  }
+  return html;
+}
+
+/* ============================================================
+   COMPONENTES DE FORMULARIO
+   ============================================================ */
+function checklistHTML(items, prefijo){
+  return `<div class="chk">` + items.map((it,i)=>`
+    <div class="chk-fila">
+      <div class="txt">${esc(it[0])}<i>${esc(it[1])}</i></div>
+      <div class="tri" data-chk="${prefijo}${i}">
+        <button type="button" onclick="marcar(this,'C')" title="Conforme">C</button>
+        <button type="button" onclick="marcar(this,'N')" title="No conforme">NC</button>
+        <button type="button" onclick="marcar(this,'X')" title="No aplica">NA</button>
+      </div>
+    </div>`).join('') + `</div>`;
+}
+function marcar(btn, v){
+  const cont = btn.parentElement;
+  [...cont.children].forEach(b=>b.removeAttribute('data-on'));
+  btn.setAttribute('data-on', v);
+  cont.dataset.valor = v;
+}
+function leerChecklist(prefijo, items){
+  const r = [];
+  items.forEach((it,i)=>{
+    const c = document.querySelector(`[data-chk="${prefijo}${i}"]`);
+    r.push({item:it[0], ref:it[1], v:c?.dataset.valor||''});
+  });
+  return r;
+}
+function resumenChk(arr){
+  const c = arr.filter(x=>x.v==='C').length, n = arr.filter(x=>x.v==='N').length,
+        x = arr.filter(x=>x.v==='X').length, s = arr.filter(x=>!x.v).length;
+  return {c,n,x,s};
+}
+function val(id){ const e=document.getElementById(id); return e ? e.value.trim() : ''; }
+function selOpts(arr, sel){ return arr.map(o=>`<option ${o===sel?'selected':''}>${esc(o)}</option>`).join(''); }
+function campoTurno(){ return `<div class="campo"><label>Turno</label>
+  <select id="f_turno">${selOpts(['Turno 1 (mañana)','Turno 2 (tarde)','Turno 3 (noche)'])}</select></div>`; }
+function campoResp(){ return `<div class="campo"><label>Responsable del registro</label>
+  <input id="f_resp" value="${esc(D.cfg.responsable||'')}" placeholder="Nombre de quien firma"></div>`; }
+
+function encabezado(titulo, nota){
+  return `<div class="panel"><h2>${esc(titulo)}</h2><p class="nota">${nota}</p>`;
+}
+function listaRegistros(clave, render){
+  const arr = [...D[clave]].reverse().slice(0,25);
+  if(!arr.length) return `<div class="vacio"><b>Sin registros</b>Diligencie el primer formato arriba y quedará guardado con fecha y hora de Colombia.</div>`;
+  return arr.map(r=>render(r)).join('') +
+    (D[clave].length>25?`<div style="font-size:12px;color:var(--tinta-3);text-align:center;padding:8px">Mostrando los 25 más recientes de ${D[clave].length}.</div>`:'');
+}
+function borrar(clave, rid){
+  if(!confirm('¿Eliminar este registro? No se puede deshacer.')) return;
+  D[clave] = D[clave].filter(r=>r.id!==rid); salvar(); pintar(); aviso('Registro eliminado');
+}
+function botonBorrar(clave, rid){
+  return `<button class="btn btn-s no-print" style="padding:5px 11px;font-size:12px;margin-top:8px"
+    onclick="borrar('${clave}','${rid}')">Eliminar</button>`;
+}
+
+/* ============================================================
+   1. ALISTAMIENTO PRE-OPERACIONAL
+   ============================================================ */
+function vPreop(){
+  return encabezado('Alistamiento pre-operacional',
+    'Se diligencia <b>antes</b> de arrancar la empacadora, en cada turno. Marque C (conforme), NC (no conforme) o NA (no aplica). Todo NC genera una no conformidad que debe cerrar.') +
+    campoTurno() + checklistHTML(CHK_PREOP,'p') +
+    `<div class="campo"><label>Observaciones</label>
+      <textarea id="f_obs" placeholder="Qué se encontró, qué se corrigió antes de arrancar"></textarea></div>` +
+    campoResp() +
+    `<div class="acciones"><button class="btn btn-p btn-full" onclick="guardarPreop()">Guardar alistamiento</button></div></div>
+    <div class="rotulo">Registros anteriores</div>` +
+    listaRegistros('preop', r=>{
+      const s = resumenChk(r.items);
+      return `<div class="reg"><div class="reg-top">
+        <span class="reg-cod">${esc(r.turno||'')}</span><span class="reg-fec">${fmtF(r.fecha)} ${esc(r.hora||'')}</span></div>
+        <div class="reg-det">
+        <span class="pill ok">${s.c} conformes</span> ${s.n?`<span class="pill no">${s.n} no conformes</span>`:''}
+        ${s.x?`<span class="pill esp">${s.x} N/A</span>`:''}<br>
+        <span style="font-size:12.5px">Responsable: ${esc(r.resp||'—')}</span>
+        ${r.obs?`<br><span style="font-size:12.5px">${esc(r.obs)}</span>`:''}</div>
+        ${botonBorrar('preop', r.id)}</div>`;
+    });
+}
+function guardarPreop(){
+  const items = leerChecklist('p', CHK_PREOP);
+  const s = resumenChk(items);
+  if(s.s === CHK_PREOP.length) return aviso('Marque al menos un ítem antes de guardar');
+  if(s.s) if(!confirm(`Quedan ${s.s} ítems sin marcar. ¿Guardar de todos modos?`)) return;
+  const t = coAhora();
+  D.preop.push({id:id(), fecha:t.fecha, hora:t.hora, turno:val('f_turno'),
+    items, obs:val('f_obs'), resp:val('f_resp')});
+  if(val('f_resp')) D.cfg.responsable = val('f_resp');
+  salvar();
+  const nc = items.filter(i=>i.v==='N');
+  pintar_tras(nc.length ? `Guardado. ${nc.length} hallazgo(s) NC: regístrelos en No conformidades.` : 'Alistamiento guardado');
+}
+function pintar_tras(msg){ ir(vista); aviso(msg); }
+
+/* ============================================================
+   2. HIGIENE DEL PERSONAL
+   ============================================================ */
+function vHigiene(){
+  const act = D.manipuladores.filter(m=>m.activo!==false);
+  if(!act.length) return `<div class="panel"><h2>Higiene del personal</h2>
+    <p class="nota">Primero registre a los manipuladores de la planta con sus certificados. Sin eso no se puede verificar la higiene diaria.</p>
+    <button class="btn btn-p btn-full" onclick="ir('manipuladores')">Ir a Manipuladores</button></div>`;
+  return encabezado('Higiene del personal',
+    'Verificación al ingreso del turno, por manipulador. Incluye la declaración diaria de estado de salud que exige el artículo 13 de la Resolución 2674.') +
+    `<div class="habeas"><b>Aviso de tratamiento de datos</b><br>
+     El estado de salud es dato sensible (Ley 1581 de 2012). Se registra solo el resultado de la verificación, nunca el diagnóstico, y su consulta queda restringida al responsable de calidad.</div>
+     <div class="campo"><label>Manipulador</label><select id="f_manip">
+     ${act.map(m=>`<option value="${m.id}">${esc(m.nombre)} — ${esc(m.cargo||'')}</option>`).join('')}</select></div>` +
+    campoTurno() + checklistHTML(CHK_HIGIENE,'h') +
+    `<div class="campo"><label>Observaciones y acción tomada</label>
+      <textarea id="f_obs" placeholder="Ej.: se envió a cambiar cofia; se reubicó a labor sin contacto con producto"></textarea></div>` +
+    campoResp() +
+    `<div class="acciones"><button class="btn btn-p btn-full" onclick="guardarHigiene()">Guardar verificación</button></div></div>
+     <div class="rotulo">Registros anteriores</div>` +
+    listaRegistros('higiene', r=>{
+      const s = resumenChk(r.items);
+      const m = D.manipuladores.find(x=>x.id===r.manipId);
+      return `<div class="reg"><div class="reg-top">
+        <span class="reg-cod">${esc(m?m.nombre:'(manipulador eliminado)')}</span>
+        <span class="reg-fec">${fmtF(r.fecha)} ${esc(r.hora||'')}</span></div>
+        <div class="reg-det"><span class="pill ok">${s.c} OK</span>
+        ${s.n?`<span class="pill no">${s.n} incumple</span>`:''} · ${esc(r.turno||'')}
+        ${r.obs?`<br><span style="font-size:12.5px">${esc(r.obs)}</span>`:''}</div>
+        ${botonBorrar('higiene', r.id)}</div>`;
+    });
+}
+function guardarHigiene(){
+  const items = leerChecklist('h', CHK_HIGIENE);
+  const s = resumenChk(items);
+  if(s.s === CHK_HIGIENE.length) return aviso('Marque al menos un ítem antes de guardar');
+  const t = coAhora();
+  D.higiene.push({id:id(), fecha:t.fecha, hora:t.hora, manipId:val('f_manip'),
+    turno:val('f_turno'), items, obs:val('f_obs'), resp:val('f_resp')});
+  salvar(); pintar_tras(s.n?'Guardado con incumplimientos. Registre la acción correctiva.':'Verificación guardada');
+}
+
+/* ============================================================
+   3. LIMPIEZA Y DESINFECCIÓN
+   ============================================================ */
+function vLD(){
+  return encabezado('Limpieza y desinfección',
+    'Programa 1 del Plan de Saneamiento. Registre el área, el producto, la <b>concentración real de uso</b> y la verificación posterior. La concentración es el dato que más falla en auditoría.') +
+    `<div class="campo"><label>Área o equipo</label><select id="f_area">${selOpts(AREAS_LD)}</select></div>
+     <div class="dos">
+      <div class="campo"><label>Producto usado</label><input id="f_prod" placeholder="Ej.: hipoclorito de sodio"></div>
+      <div class="campo"><label>Concentración</label><input id="f_conc" placeholder="Ej.: 200 ppm"></div>
+     </div>
+     <div class="dos">
+      <div class="campo"><label>Hora de inicio</label><input type="time" id="f_ini" value="${coAhora().hora}"></div>
+      <div class="campo"><label>Hora final</label><input type="time" id="f_fin"></div>
+     </div>
+     <div class="campo"><label>Método</label><select id="f_met">
+       ${selOpts(['Barrido y trapeado','Lavado con agua a presión','Fricción con cepillo y detergente','Aspirado en seco','Desinfección por aspersión','Limpieza en seco (sin agua)'])}
+     </select><div class="ayuda">En zona de grano seco evite el agua donde no sea necesaria: la humedad favorece hongos.</div></div>
+     <div class="campo"><label>Verificación posterior</label><select id="f_ver">
+       ${selOpts(['Conforme — área lista para producción','Conforme con observación','No conforme — se repite el procedimiento'])}</select></div>
+     <div class="campo"><label>Observaciones</label><textarea id="f_obs"></textarea></div>` +
+    campoResp() +
+    `<div class="acciones"><button class="btn btn-p btn-full" onclick="guardarLD()">Guardar limpieza</button></div></div>
+     <div class="rotulo">Registros anteriores</div>` +
+    listaRegistros('ld', r=>`<div class="reg"><div class="reg-top">
+      <span class="reg-cod">${esc(r.area)}</span><span class="reg-fec">${fmtF(r.fecha)} ${esc(r.ini||'')}–${esc(r.fin||'')}</span></div>
+      <div class="reg-det">${esc(r.prod||'—')} · ${esc(r.conc||'sin concentración')} · ${esc(r.metodo||'')}<br>
+      <span class="pill ${r.verif&&r.verif.startsWith('No')?'no':'ok'}">${esc(r.verif||'')}</span>
+      <span style="font-size:12.5px"> · ${esc(r.resp||'—')}</span>
+      ${r.obs?`<br><span style="font-size:12.5px">${esc(r.obs)}</span>`:''}</div>
+      ${botonBorrar('ld', r.id)}</div>`);
+}
+function guardarLD(){
+  if(!val('f_prod')) return aviso('Indique el producto usado');
+  const t = coAhora();
+  D.ld.push({id:id(), fecha:t.fecha, area:val('f_area'), prod:val('f_prod'), conc:val('f_conc'),
+    ini:val('f_ini'), fin:val('f_fin'), metodo:val('f_met'), verif:val('f_ver'),
+    obs:val('f_obs'), resp:val('f_resp')});
+  salvar(); pintar_tras('Limpieza registrada');
+}
+
+/* ============================================================
+   4. CONTROL DE PLAGAS
+   ============================================================ */
+function vPlagas(){
+  return encabezado('Control integrado de plagas',
+    'Programa 2 del Plan de Saneamiento. Revise estación por estación. El INVIMA pide además el <b>concepto sanitario vigente de la empresa aplicadora</b> y las fichas técnicas de los plaguicidas.') +
+    `<div class="dos">
+      <div class="campo"><label>Estación N°</label><input id="f_est" placeholder="Ej.: E-07"></div>
+      <div class="campo"><label>Tipo</label><select id="f_tipo">
+        ${selOpts(['Cebadero de roedores','Trampa mecánica','Trampa de pegante','Lámpara de luz UV','Trampa de feromona','Punto de inspección'])}</select></div>
+     </div>
+     <div class="campo"><label>Ubicación</label><input id="f_ub" placeholder="Ej.: muro norte, bodega de producto terminado"></div>
+     <div class="campo"><label>Estado de la estación</label><select id="f_edo">
+       ${selOpts(['Intacta','Consumo parcial del cebo','Consumo total del cebo','Activada / con captura','Deteriorada — se reemplaza','Faltante — se repone'])}</select></div>
+     <div class="campo"><label>Evidencia de plaga en el área</label><select id="f_ev">
+       ${selOpts(['Ninguna','Heces de roedor','Roeduras en sacos o empaque','Insectos rastreros','Insectos voladores','Gorgojo o palomilla en grano','Aves','Otro'])}</select>
+       <div class="ayuda">Gorgojo o palomilla en arroz obliga a bloquear el lote y evaluar destino.</div></div>
+     <div class="campo"><label>Acción tomada</label><textarea id="f_acc" placeholder="Ej.: se repuso cebo, se selló ingreso de aire, se notificó a la empresa aplicadora"></textarea></div>
+     <div class="dos">
+      <div class="campo"><label>Empresa aplicadora</label><input id="f_emp" placeholder="Razón social"></div>
+      <div class="campo"><label>Concepto sanitario vence</label><input type="date" id="f_cs"></div>
+     </div>` + campoResp() +
+    `<div class="acciones"><button class="btn btn-p btn-full" onclick="guardarPlagas()">Guardar inspección</button></div></div>
+     <div class="rotulo">Inspecciones anteriores</div>` +
+    listaRegistros('plagas', r=>`<div class="reg"><div class="reg-top">
+      <span class="reg-cod">${esc(r.estacion||'—')} · ${esc(r.tipo||'')}</span><span class="reg-fec">${fmtF(r.fecha)}</span></div>
+      <div class="reg-det">${esc(r.ubic||'')}<br>
+      <span class="pill ${r.estado==='Intacta'?'ok':'esp'}">${esc(r.estado||'')}</span>
+      <span class="pill ${r.evidencia==='Ninguna'?'ok':'no'}">Evidencia: ${esc(r.evidencia||'')}</span>
+      ${r.accion?`<br><span style="font-size:12.5px">${esc(r.accion)}</span>`:''}</div>
+      ${botonBorrar('plagas', r.id)}</div>`);
+}
+function guardarPlagas(){
+  if(!val('f_est')) return aviso('Indique el número de estación');
+  const t = coAhora();
+  D.plagas.push({id:id(), fecha:t.fecha, hora:t.hora, estacion:val('f_est'), tipo:val('f_tipo'),
+    ubic:val('f_ub'), estado:val('f_edo'), evidencia:val('f_ev'), accion:val('f_acc'),
+    empresa:val('f_emp'), conceptoVence:val('f_cs'), resp:val('f_resp')});
+  salvar(); pintar_tras('Inspección guardada');
+}
+
+/* ============================================================
+   5. AGUA POTABLE
+   ============================================================ */
+function vAgua(){
+  return encabezado('Abastecimiento de agua potable',
+    'Programa 3 del Plan de Saneamiento. El cloro residual libre debe mantenerse entre <b>0,3 y 2,0 mg/L</b> y el pH entre <b>6,5 y 9,0</b> (Resolución 2115 de 2007). Fuera de rango, el sistema lo marca en rojo.') +
+    `<div class="campo"><label>Punto de muestreo</label><select id="f_pt">
+      ${selOpts(['Tanque de almacenamiento','Lavamanos del área de empaque','Grifo de limpieza','Baños','Acometida principal'])}</select></div>
+     <div class="dos">
+      <div class="campo"><label>Cloro residual libre (mg/L)</label><input type="number" step="0.01" id="f_cl" placeholder="0.50"></div>
+      <div class="campo"><label>pH</label><input type="number" step="0.1" id="f_ph" placeholder="7.0"></div>
+     </div>
+     <div class="dos">
+      <div class="campo"><label>Hora de la toma</label><input type="time" id="f_hr" value="${coAhora().hora}"></div>
+      <div class="campo"><label>Última desinfección del tanque</label><input type="date" id="f_tk"></div>
+     </div>
+     <div class="campo"><label>Observaciones</label><textarea id="f_obs" placeholder="Turbiedad, olor, color, acción si estuvo fuera de rango"></textarea></div>` +
+    campoResp() +
+    `<div class="acciones"><button class="btn btn-p btn-full" onclick="guardarAgua()">Guardar medición</button></div></div>
+     <div class="rotulo">Mediciones anteriores</div>` +
+    listaRegistros('agua', r=>{
+      const c = parseFloat(r.cloro), ok = !isNaN(c) && c>=0.3 && c<=2.0;
+      return `<div class="reg"><div class="reg-top">
+        <span class="reg-cod">${esc(r.punto)}</span><span class="reg-fec">${fmtF(r.fecha)} ${esc(r.hora||'')}</span></div>
+        <div class="reg-det"><span class="pill ${ok?'ok':'no'}">Cloro ${esc(r.cloro||'—')} mg/L</span>
+        <span class="pill esp">pH ${esc(r.ph||'—')}</span>
+        ${!ok?'<br><b style="color:var(--rojo)">Fuera del rango admisible</b>':''}
+        ${r.obs?`<br><span style="font-size:12.5px">${esc(r.obs)}</span>`:''}</div>
+        ${botonBorrar('agua', r.id)}</div>`;
+    });
+}
+function guardarAgua(){
+  if(!val('f_cl')) return aviso('Registre el cloro residual libre');
+  const t = coAhora();
+  D.agua.push({id:id(), fecha:t.fecha, hora:val('f_hr')||t.hora, punto:val('f_pt'),
+    cloro:val('f_cl'), ph:val('f_ph'), tanque:val('f_tk'), obs:val('f_obs'), resp:val('f_resp')});
+  salvar();
+  const c = parseFloat(val('f_cl'));
+  pintar_tras((c<0.3||c>2.0) ? 'Guardado. Cloro FUERA de rango: tome acción y registre la NC.' : 'Medición guardada');
+}
+
+/* ============================================================
+   6. RESIDUOS
+   ============================================================ */
+function vResiduos(){
+  return encabezado('Manejo de residuos',
+    'Programa 4 del Plan de Saneamiento. Cubre sólidos y líquidos. El polvillo y las bolsas defectuosas también son residuo y deben tener destino documentado.') +
+    `<div class="campo"><label>Tipo de residuo</label><select id="f_tipo">
+      ${selOpts(['Polvillo y cascarilla de arroz','Grano de barrido (no apto para consumo)','Bolsa o empaque defectuoso','Cartón y estibas','Residuo ordinario','Residuo peligroso (envases de plaguicida)','Aguas residuales de limpieza'])}</select></div>
+     <div class="dos">
+      <div class="campo"><label>Cantidad</label><input id="f_cant" placeholder="Ej.: 18 kg"></div>
+      <div class="campo"><label>Destino</label><select id="f_dest">
+        ${selOpts(['Empresa de aseo','Gestor autorizado','Venta como subproducto animal','Reciclador','Disposición interna'])}</select></div>
+     </div>
+     <div class="campo"><label>Estado de canecas y punto de acopio</label><select id="f_edo">
+       ${selOpts(['Limpias, tapadas e identificadas','Requiere lavado','Sin tapa — se corrige','Rebosadas — se evacúa'])}</select></div>
+     <div class="campo"><label>Observaciones</label><textarea id="f_obs"></textarea></div>` +
+    campoResp() +
+    `<div class="acciones"><button class="btn btn-p btn-full" onclick="guardarResiduos()">Guardar registro</button></div></div>
+     <div class="rotulo">Registros anteriores</div>` +
+    listaRegistros('residuos', r=>`<div class="reg"><div class="reg-top">
+      <span class="reg-cod">${esc(r.tipo)}</span><span class="reg-fec">${fmtF(r.fecha)}</span></div>
+      <div class="reg-det">${esc(r.cant||'—')} → ${esc(r.destino||'')}<br>
+      <span class="pill ${r.estado&&r.estado.startsWith('Limpias')?'ok':'esp'}">${esc(r.estado||'')}</span></div>
+      ${botonBorrar('residuos', r.id)}</div>`);
+}
+function guardarResiduos(){
+  const t = coAhora();
+  D.residuos.push({id:id(), fecha:t.fecha, hora:t.hora, tipo:val('f_tipo'), cant:val('f_cant'),
+    destino:val('f_dest'), estado:val('f_edo'), obs:val('f_obs'), resp:val('f_resp')});
+  salvar(); pintar_tras('Registro guardado');
+}
+
+/* ============================================================
+   7. RECEPCIÓN DE MATERIA PRIMA
+   ============================================================ */
+function vMP(){
+  return encabezado('Recepción de arroz',
+    'Punto crítico de trazabilidad: este lote es el que después se amarra a cada lote de empaque. Sin este registro no hay trazabilidad hacia atrás.') +
+    `<div class="dos">
+      <div class="campo"><label>Proveedor</label><input id="f_prov" placeholder="Razón social del molino"></div>
+      <div class="campo"><label>Lote del proveedor</label><input id="f_lote" placeholder="Como viene en el saco"></div>
+     </div>
+     <div class="dos">
+      <div class="campo"><label>Remisión o factura</label><input id="f_rem"></div>
+      <div class="campo"><label>Cantidad recibida (kg)</label><input type="number" id="f_kg"></div>
+     </div>
+     <div class="campo"><label>Tipo de arroz</label><select id="f_var">
+       ${selOpts(['Arroz blanco','Arroz integral','Arroz partido','Arroz paddy seco'])}</select></div>
+     <div class="rotulo">Estado del vehículo</div>
+     <div class="dos">
+      <div class="campo"><label>Placa</label><input id="f_placa" style="text-transform:uppercase"></div>
+      <div class="campo"><label>Condición</label><select id="f_veh">
+        ${selOpts(['Limpio, seco y sin olores extraños','Con residuos — se rechaza descargue','Con humedad','Con evidencia de plagas — se rechaza'])}</select></div>
+     </div>
+     <div class="rotulo">Análisis de entrada</div>
+     <div class="dos">
+      <div class="campo"><label>Humedad (%)</label><input type="number" step="0.1" id="f_hum" placeholder="13.0">
+        <div class="ayuda">Por encima de 14% aumenta el riesgo de hongos.</div></div>
+      <div class="campo"><label>Impurezas (%)</label><input type="number" step="0.01" id="f_imp"></div>
+     </div>
+     <div class="campo"><label>Evaluación sensorial</label><select id="f_sens">
+       ${selOpts(['Olor y color característicos','Olor a humedad o moho','Olor a químico','Decoloración','Presencia de insectos vivos'])}</select></div>
+     <div class="campo"><label>Estado de sacos y estibas</label><select id="f_sacos">
+       ${selOpts(['Íntegros y limpios','Algunos rotos — se separan','Sucios o contaminados','Estibas en mal estado'])}</select></div>
+     <div class="campo"><label>Decisión</label><select id="f_dec">
+       ${selOpts(['ACEPTADO','ACEPTADO CON OBSERVACIÓN','RECHAZADO','EN CUARENTENA'])}</select></div>
+     <div class="campo"><label>Observaciones</label><textarea id="f_obs"></textarea></div>` +
+    campoResp() +
+    `<div class="acciones"><button class="btn btn-p btn-full" onclick="guardarMP()">Guardar recepción</button></div></div>
+     <div class="rotulo">Recepciones anteriores</div>` +
+    listaRegistros('mp', r=>`<div class="reg"><div class="reg-top">
+      <span class="reg-cod">Lote ${esc(r.loteProv||'—')}</span><span class="reg-fec">${fmtF(r.fecha)}</span></div>
+      <div class="reg-det">${esc(r.proveedor||'—')} · ${esc(r.kg||'?')} kg · ${esc(r.variedad||'')}<br>
+      <span class="pill ${r.decision==='ACEPTADO'?'ok':(r.decision==='RECHAZADO'?'no':'esp')}">${esc(r.decision||'')}</span>
+      <span class="pill esp">Humedad ${esc(r.humedad||'—')}%</span>
+      <span style="font-size:12.5px"> · Placa ${esc(r.placa||'—')}</span></div>
+      ${botonBorrar('mp', r.id)}</div>`);
+}
+function guardarMP(){
+  if(!val('f_prov')||!val('f_lote')) return aviso('Proveedor y lote del proveedor son obligatorios');
+  const t = coAhora();
+  D.mp.push({id:id(), fecha:t.fecha, hora:t.hora, proveedor:val('f_prov'), loteProv:val('f_lote'),
+    remision:val('f_rem'), kg:val('f_kg'), variedad:val('f_var'), placa:val('f_placa').toUpperCase(),
+    vehiculo:val('f_veh'), humedad:val('f_hum'), impurezas:val('f_imp'), sensorial:val('f_sens'),
+    sacos:val('f_sacos'), decision:val('f_dec'), obs:val('f_obs'), resp:val('f_resp')});
+  salvar(); pintar_tras('Recepción registrada');
+}
+
+/* ============================================================
+   8. INSUMO DE EMPAQUE
+   ============================================================ */
+function vInsumo(){
+  return encabezado('Insumo de empaque',
+    'La bolsa que toca el arroz es material en contacto con alimento: la Resolución 683 de 2012 exige <b>certificado de aptitud sanitaria vigente</b> del proveedor. Es de los hallazgos más frecuentes en visita.') +
+    `<div class="dos">
+      <div class="campo"><label>Proveedor</label><input id="f_prov"></div>
+      <div class="campo"><label>Lote del material</label><input id="f_lote"></div>
+     </div>
+     <div class="dos">
+      <div class="campo"><label>Referencia o presentación</label><input id="f_ref" placeholder="Ej.: bolsa PP 500 g impresa"></div>
+      <div class="campo"><label>Cantidad recibida</label><input id="f_cant" placeholder="Ej.: 40.000 unidades"></div>
+     </div>
+     <div class="rotulo">Certificado de aptitud sanitaria</div>
+     <div class="dos">
+      <div class="campo"><label>Número del certificado</label><input id="f_cert"></div>
+      <div class="campo"><label>Vigente hasta</label><input type="date" id="f_certv"></div>
+     </div>
+     <div class="campo"><label>Estado del material</label><select id="f_edo">
+       ${selOpts(['Limpio, sellado e íntegro','Empaque secundario roto','Con polvo o suciedad','Impresión defectuosa','Con olor extraño'])}</select></div>
+     <div class="campo"><label>Verificación del rótulo impreso</label><select id="f_rot">
+       ${selOpts(['Completo y legible','Falta información obligatoria','Texto ilegible o corrido','No aplica — bolsa sin impresión'])}</select>
+       <div class="ayuda">Res. 5109/2005 y Res. 810/2021: nombre, contenido neto, ingredientes, lote, fecha, fabricante, registro sanitario y tabla nutricional.</div></div>
+     <div class="campo"><label>Decisión</label><select id="f_dec">${selOpts(['ACEPTADO','ACEPTADO CON OBSERVACIÓN','RECHAZADO'])}</select></div>
+     <div class="campo"><label>Observaciones</label><textarea id="f_obs"></textarea></div>` +
+    campoResp() +
+    `<div class="acciones"><button class="btn btn-p btn-full" onclick="guardarInsumo()">Guardar recepción</button></div></div>
+     <div class="rotulo">Recepciones anteriores</div>` +
+    listaRegistros('insumo', r=>{
+      const dd = diasHasta(r.certVence);
+      return `<div class="reg"><div class="reg-top">
+        <span class="reg-cod">Lote ${esc(r.loteBolsa||'—')}</span><span class="reg-fec">${fmtF(r.fecha)}</span></div>
+        <div class="reg-det">${esc(r.proveedor||'')} · ${esc(r.referencia||'')}<br>
+        <span class="pill ${r.decision==='ACEPTADO'?'ok':'esp'}">${esc(r.decision||'')}</span>
+        <span class="pill ${dd===null?'esp':(dd<0?'no':'ok')}">Certificado ${r.certVence?(dd<0?'VENCIDO':'vence '+fmtF(r.certVence)):'sin registrar'}</span></div>
+        ${botonBorrar('insumo', r.id)}</div>`;
+    });
+}
+function guardarInsumo(){
+  if(!val('f_prov')) return aviso('Indique el proveedor');
+  const t = coAhora();
+  D.insumo.push({id:id(), fecha:t.fecha, proveedor:val('f_prov'), loteBolsa:val('f_lote'),
+    referencia:val('f_ref'), cantidad:val('f_cant'), certNum:val('f_cert'), certVence:val('f_certv'),
+    estado:val('f_edo'), rotulo:val('f_rot'), decision:val('f_dec'), obs:val('f_obs'), resp:val('f_resp')});
+  salvar();
+  pintar_tras(val('f_certv') ? 'Insumo registrado' : 'Guardado, pero SIN certificado de aptitud sanitaria. Exíjalo al proveedor.');
+}
+
+/* ============================================================
+   9. CONTROL DE PROCESO
+   ============================================================ */
+function nuevoLote(){
+  const t = coAhora();
+  D.consec.lote = (D.consec.lote||0) + 1;
+  return `L${t.aa}${t.mes}${t.dia}-${String(D.consec.lote).padStart(3,'0')}`;
+}
+function vProd(){
+  const mpOk = D.mp.filter(r=>r.decision==='ACEPTADO'||r.decision==='ACEPTADO CON OBSERVACIÓN');
+  const insOk = D.insumo.filter(r=>r.decision!=='RECHAZADO');
+  return encabezado('Control de proceso y peso',
+    'Cada corrida genera un lote. Aquí se amarra el arroz de entrada, la bolsa usada y el muestreo de peso. Este es el registro que sostiene toda la trazabilidad.') +
+    `<div class="dos">
+      <div class="campo"><label>Presentación</label><select id="f_pres" onchange="pintarPesoNominal()">
+        ${D.cfg.presentaciones.map((p,i)=>`<option value="${i}">${esc(p.nombre)}</option>`).join('')}</select></div>
+      ${campoTurno().replace('<div class="campo">','<div class="campo">')}
+     </div>
+     <div class="campo"><label>Lote de arroz utilizado</label><select id="f_mp">
+       <option value="">— seleccione la recepción —</option>
+       ${mpOk.slice().reverse().map(r=>`<option value="${r.id}">${esc(r.loteProv)} · ${esc(r.proveedor)} · ${fmtF(r.fecha)}</option>`).join('')}</select>
+       ${!mpOk.length?'<div class="ayuda" style="color:var(--rojo)">No hay recepciones de arroz aceptadas. Regístrelas primero.</div>':''}</div>
+     <div class="campo"><label>Lote de bolsa utilizado</label><select id="f_ins">
+       <option value="">— seleccione el insumo —</option>
+       ${insOk.slice().reverse().map(r=>`<option value="${r.id}">${esc(r.loteBolsa||'s/l')} · ${esc(r.referencia||'')} · ${esc(r.proveedor)}</option>`).join('')}</select></div>
+     <div class="dos">
+      <div class="campo"><label>Hora de inicio</label><input type="time" id="f_ini" value="${coAhora().hora}"></div>
+      <div class="campo"><label>Hora final</label><input type="time" id="f_fin"></div>
+     </div>
+     <div class="campo"><label>Unidades producidas</label><input type="number" id="f_und"></div>
+
+     <div class="rotulo">Muestreo de peso</div>
+     <div class="alerta ambar" style="font-size:13px"><span>⚖️</span><div id="nominalInfo"></div></div>
+     <div class="campo"><label>Pesos medidos (gramos, separados por coma)</label>
+       <input id="f_pesos" placeholder="502, 499, 501, 500, 503" oninput="calcPesos()">
+       <div class="ayuda">Tome mínimo 5 muestras a lo largo de la corrida, no todas seguidas.</div></div>
+     <div id="resPesos"></div>
+
+     <div class="rotulo">Verificaciones del empaque</div>
+     <div class="dos">
+      <div class="campo"><label>Calidad del sellado</label><select id="f_sell">
+        ${selOpts(['Hermético y uniforme','Sellado débil — se reprocesa','Sellado quemado','Con producto atrapado en el sello'])}</select></div>
+      <div class="campo"><label>Codificado</label><select id="f_cod">
+        ${selOpts(['Lote y fecha legibles','Impresión débil','Datos incorrectos — se detiene línea','Sin código'])}</select></div>
+     </div>
+     <div class="campo"><label>Observaciones</label><textarea id="f_obs"></textarea></div>` +
+    campoResp() +
+    `<div class="acciones"><button class="btn btn-p btn-full" onclick="guardarProd()">Cerrar y generar lote</button></div></div>
+     <div class="rotulo">Lotes producidos</div>` +
+    listaRegistros('produccion', r=>`<div class="reg"><div class="reg-top">
+      <span class="reg-cod">${esc(r.lote)}</span><span class="reg-fec">${fmtF(r.fecha)} ${esc(r.ini||'')}</span></div>
+      <div class="reg-det">${esc(r.presentacion||'')} · ${esc(r.unidades||'?')} unidades<br>
+      <span class="pill ${r.pesoOk?'ok':'no'}">Peso prom. ${esc(r.pesoProm||'—')} g</span>
+      <span class="pill ${r.sellado&&r.sellado.startsWith('Hermético')?'ok':'no'}">Sellado</span>
+      <span class="pill ${r.codificado&&r.codificado.startsWith('Lote')?'ok':'no'}">Código</span></div>
+      <button class="btn btn-s no-print" style="padding:5px 11px;font-size:12px;margin-top:8px"
+        onclick="verTraza('${esc(r.lote)}')">Ver trazabilidad</button>
+      ${botonBorrar('produccion', r.id)}</div>`);
+}
+function pintarPesoNominal(){
+  const p = D.cfg.presentaciones[parseInt(val('f_pres'))||0];
+  if(!p) return;
+  const min = (p.gramos*(1-p.tol/100)).toFixed(1), max = (p.gramos*(1+p.tol/100)).toFixed(1);
+  const e = document.getElementById('nominalInfo');
+  if(e) e.innerHTML = `<b>Peso nominal ${p.gramos} g</b> · tolerancia ±${p.tol}% → admisible entre <b>${min} g</b> y <b>${max} g</b>`;
+  calcPesos();
+}
+function calcPesos(){
+  const p = D.cfg.presentaciones[parseInt(val('f_pres'))||0];
+  const nums = val('f_pesos').split(',').map(x=>parseFloat(x.trim())).filter(x=>!isNaN(x));
+  const e = document.getElementById('resPesos'); if(!e) return;
+  if(!nums.length || !p){ e.innerHTML=''; return; }
+  const prom = nums.reduce((a,b)=>a+b,0)/nums.length;
+  const min = p.gramos*(1-p.tol/100), max = p.gramos*(1+p.tol/100);
+  const fuera = nums.filter(n=>n<min||n>max);
+  const desv = Math.sqrt(nums.reduce((a,b)=>a+(b-prom)**2,0)/nums.length);
+  e.innerHTML = `<div class="alerta ${fuera.length?'rojo':'verde'}"><span>${fuera.length?'⛔':'✅'}</span><div>
+    <b>Promedio ${prom.toFixed(1)} g</b> · desviación ${desv.toFixed(2)} g · ${nums.length} muestras<br>
+    ${fuera.length ? `<span>${fuera.length} muestra(s) fuera de tolerancia: ${fuera.join(', ')} g. Ajuste la dosificadora y no libere el lote.</span>`
+                   : '<span>Todas las muestras dentro de tolerancia. Lote apto para liberar.</span>'}</div></div>`;
+}
+function guardarProd(){
+  if(!val('f_mp')) return aviso('Seleccione el lote de arroz utilizado');
+  const p = D.cfg.presentaciones[parseInt(val('f_pres'))||0];
+  const nums = val('f_pesos').split(',').map(x=>parseFloat(x.trim())).filter(x=>!isNaN(x));
+  if(nums.length < 3) return aviso('Registre al menos 3 muestras de peso');
+  const prom = nums.reduce((a,b)=>a+b,0)/nums.length;
+  const min = p.gramos*(1-p.tol/100), max = p.gramos*(1+p.tol/100);
+  const fuera = nums.filter(n=>n<min||n>max);
+  const t = coAhora();
+  const lote = nuevoLote();
+  D.produccion.push({id:id(), lote, fecha:t.fecha, hora:t.hora, turno:val('f_turno'),
+    presentacion:p.nombre, nominal:p.gramos, tol:p.tol, mpId:val('f_mp'), insId:val('f_ins'),
+    ini:val('f_ini'), fin:val('f_fin'), unidades:val('f_und'), pesos:nums,
+    pesoProm:prom.toFixed(1), pesoOk:fuera.length===0, fueraTol:fuera.length,
+    sellado:val('f_sell'), codificado:val('f_cod'), obs:val('f_obs'), resp:val('f_resp')});
+  salvar(); ir('produccion');
+  aviso(`Lote ${lote} generado${fuera.length?' — CON pesos fuera de tolerancia':''}`);
+}
+
+/* ============================================================
+   10. MANIPULADORES
+   ============================================================ */
+function vManip(){
+  return encabezado('Manipuladores de alimentos',
+    'La Resolución 2674 exige certificado médico de aptitud, capacitación <b>continua</b> (no solo el curso inicial) y educación sanitaria documentada. El sistema le avisa 30 días antes de cada vencimiento.') +
+    `<div class="habeas"><b>Aviso de privacidad</b><br>
+     Se recogen datos personales y de salud con la única finalidad de acreditar aptitud sanitaria ante la autoridad. La cédula se muestra enmascarada. El titular puede conocer, actualizar, rectificar y suprimir sus datos (Ley 1581 de 2012).</div>
+     <div class="dos">
+      <div class="campo"><label>Nombre completo</label><input id="f_nom"></div>
+      <div class="campo"><label>Cédula</label><input id="f_ced" inputmode="numeric"></div>
+     </div>
+     <div class="dos">
+      <div class="campo"><label>Cargo</label><select id="f_cargo">
+        ${selOpts(['Operario de empaque','Auxiliar de bodega','Estibador','Jefe de bodega','Aseo y desinfección','Conductor'])}</select></div>
+      <div class="campo"><label>Fecha de ingreso</label><input type="date" id="f_ing"></div>
+     </div>
+     <div class="rotulo">Vigencias</div>
+     <div class="dos">
+      <div class="campo"><label>Certificado médico vence</label><input type="date" id="f_cm"></div>
+      <div class="campo"><label>Carné de manipulación vence</label><input type="date" id="f_cr"></div>
+     </div>
+     <div class="dos">
+      <div class="campo"><label>Última capacitación BPM</label><input type="date" id="f_cap"></div>
+      <div class="campo"><label>Capacitación vence</label><input type="date" id="f_capv"></div>
+     </div>
+     <div class="campo"><label>Horas de capacitación acumuladas en el año</label><input type="number" id="f_hrs" placeholder="Ej.: 10"></div>
+     <div class="acciones"><button class="btn btn-p btn-full" onclick="guardarManip()">Agregar manipulador</button></div></div>
+     <div class="rotulo">Personal registrado</div>` +
+    (D.manipuladores.length ? D.manipuladores.map(m=>{
+      const est = [['certMedicoVence','Médico'],['carneVence','Carné'],['capacitacionVence','Capacitación']]
+        .map(([k,et])=>{ const dd = diasHasta(m[k]);
+          const cl = m[k]===''||!m[k] ? 'esp' : (dd<0?'no':(dd<=30?'esp':'ok'));
+          return `<span class="pill ${cl}">${et}: ${m[k]?fmtF(m[k]):'sin dato'}</span>`; }).join(' ');
+      return `<div class="reg"><div class="reg-top">
+        <span class="reg-cod">${esc(m.nombre)}</span><span class="reg-fec">CC ${ocultarCed(m.cedula)}</span></div>
+        <div class="reg-det">${esc(m.cargo||'')}${m.ingreso?` · ingresó ${fmtF(m.ingreso)}`:''}<br>${est}
+        ${m.horas?`<br><span style="font-size:12.5px">${esc(m.horas)} horas de capacitación en el año</span>`:''}</div>
+        <button class="btn btn-s no-print" style="padding:5px 11px;font-size:12px;margin-top:8px"
+          onclick="borrarManip('${m.id}')">Retirar</button></div>`;
+    }).join('') : `<div class="vacio"><b>Sin personal registrado</b>Agregue a cada persona que toca el producto, incluido el personal de aseo.</div>`);
+}
+function guardarManip(){
+  if(!val('f_nom')) return aviso('El nombre es obligatorio');
+  D.manipuladores.push({id:id(), nombre:val('f_nom'), cedula:val('f_ced'), cargo:val('f_cargo'),
+    ingreso:val('f_ing'), certMedicoVence:val('f_cm'), carneVence:val('f_cr'),
+    capacitacionFecha:val('f_cap'), capacitacionVence:val('f_capv'), horas:val('f_hrs'), activo:true});
+  salvar(); ir('manipuladores'); aviso('Manipulador agregado');
+}
+function borrarManip(rid){
+  if(!confirm('¿Retirar a esta persona del listado activo?')) return;
+  D.manipuladores = D.manipuladores.filter(m=>m.id!==rid); salvar(); pintar(); aviso('Retirado');
+}
+
+/* ============================================================
+   11. NO CONFORMIDADES
+   ============================================================ */
+function vNC(){
+  const abiertas = D.nc.filter(n=>n.estado!=='Cerrada');
+  return encabezado('No conformidades y acciones correctivas',
+    'Sin este módulo el sistema no sirve como evidencia. Toda NC necesita causa, acción, responsable, fecha de compromiso y <b>verificación de eficacia</b>.') +
+    `<div class="dos">
+      <div class="campo"><label>Origen del hallazgo</label><select id="f_orig">
+        ${selOpts(['Alistamiento pre-operacional','Higiene del personal','Limpieza y desinfección','Control de plagas','Agua potable','Residuos','Recepción de arroz','Insumo de empaque','Control de proceso','Visita de autoridad','Queja de cliente','Auditoría interna'])}</select></div>
+      <div class="campo"><label>Severidad</label><select id="f_sev">${selOpts(['Crítica','Mayor','Menor'])}</select></div>
+     </div>
+     <div class="campo"><label>Descripción del hallazgo</label>
+       <textarea id="f_desc" placeholder="Qué se encontró, dónde y cuándo. Sea concreto."></textarea></div>
+     <div class="campo"><label>Lote afectado (si aplica)</label><input id="f_lote" placeholder="Ej.: L260813-004"></div>
+     <div class="campo"><label>Causa raíz</label>
+       <textarea id="f_causa" placeholder="Por qué ocurrió. No es lo mismo que el síntoma."></textarea></div>
+     <div class="campo"><label>Corrección inmediata</label>
+       <textarea id="f_corr" placeholder="Qué se hizo ya para contener: bloquear lote, detener línea, reprocesar"></textarea></div>
+     <div class="campo"><label>Acción correctiva</label>
+       <textarea id="f_acc" placeholder="Qué se hará para que no vuelva a pasar"></textarea></div>
+     <div class="dos">
+      <div class="campo"><label>Responsable</label><input id="f_resp2"></div>
+      <div class="campo"><label>Fecha de compromiso</label><input type="date" id="f_com"></div>
+     </div>
+     <div class="acciones"><button class="btn btn-p btn-full" onclick="guardarNC()">Abrir no conformidad</button></div></div>
+     <div class="rotulo">${abiertas.length} abierta(s) · ${D.nc.length} en total</div>` +
+    (D.nc.length ? [...D.nc].reverse().map(n=>{
+      const dd = diasHasta(n.compromiso);
+      const cerrada = n.estado==='Cerrada';
+      return `<div class="reg" style="border-left:4px solid ${cerrada?'var(--verde)':(dd!==null&&dd<0?'var(--rojo)':'var(--ambar)')}">
+        <div class="reg-top"><span class="reg-cod">${esc(n.cod)}</span>
+        <span class="reg-fec">${fmtF(n.fecha)}</span></div>
+        <div class="reg-det"><b>${esc(n.origen)}</b> · <span class="pill ${n.severidad==='Crítica'?'no':'esp'}">${esc(n.severidad)}</span>
+        <span class="pill ${cerrada?'ok':'esp'}">${esc(n.estado)}</span>
+        ${n.lote?`<span class="pill esp">Lote ${esc(n.lote)}</span>`:''}<br>
+        ${esc(n.descripcion)}
+        ${n.causa?`<br><b style="font-size:12px">Causa:</b> <span style="font-size:12.5px">${esc(n.causa)}</span>`:''}
+        ${n.accion?`<br><b style="font-size:12px">Acción:</b> <span style="font-size:12.5px">${esc(n.accion)}</span>`:''}
+        <br><span style="font-size:12.5px">${esc(n.responsable||'sin responsable')}${n.compromiso?` · compromiso ${fmtF(n.compromiso)}`:''}</span>
+        ${n.verificacion?`<br><b style="font-size:12px">Verificación:</b> <span style="font-size:12.5px">${esc(n.verificacion)}</span>`:''}</div>
+        ${!cerrada?`<button class="btn btn-p no-print" style="padding:6px 13px;font-size:12.5px;margin-top:9px"
+          onclick="cerrarNC('${n.id}')">Cerrar con verificación</button>`:''}
+        ${botonBorrar('nc', n.id)}</div>`;
+    }).join('') : `<div class="vacio"><b>Sin no conformidades</b>Abra una cada vez que el alistamiento o la higiene arroje un NC.</div>`);
+}
+function guardarNC(){
+  if(!val('f_desc')) return aviso('Describa el hallazgo');
+  const t = coAhora();
+  D.consec.nc = (D.consec.nc||0)+1;
+  D.nc.push({id:id(), cod:`NC-${t.aa}${t.mes}-${String(D.consec.nc).padStart(3,'0')}`, fecha:t.fecha,
+    origen:val('f_orig'), severidad:val('f_sev'), descripcion:val('f_desc'), lote:val('f_lote'),
+    causa:val('f_causa'), correccion:val('f_corr'), accion:val('f_acc'),
+    responsable:val('f_resp2'), compromiso:val('f_com'), estado:'Abierta', verificacion:''});
+  salvar(); ir('nc'); aviso('No conformidad abierta');
+}
+function cerrarNC(rid){
+  const v = prompt('Verificación de eficacia: ¿cómo comprobó que la acción funcionó?');
+  if(v===null||!v.trim()) return aviso('Se requiere la verificación para cerrar');
+  const n = D.nc.find(x=>x.id===rid);
+  n.verificacion = v.trim(); n.estado = 'Cerrada'; n.fechaCierre = hoy();
+  salvar(); pintar(); aviso(`${n.cod} cerrada`);
+}
+
+/* ============================================================
+   12. TRAZABILIDAD
+   ============================================================ */
+let loteBuscado = '';
+function vTraza(){
+  let html = encabezado('Trazabilidad por lote',
+    'Escriba el lote impreso en la bolsa y el sistema arma el paquete completo: de dónde vino el arroz, con qué bolsa se empacó, quién estaba en el turno y cómo estaba la planta ese día.') +
+    `<div class="campo"><label>Lote de empaque</label>
+      <input id="f_busca" value="${esc(loteBuscado)}" placeholder="Ej.: L260813-001" style="font-family:var(--mono)"
+        onkeydown="if(event.key==='Enter')buscarLote()"></div>
+     <div class="acciones"><button class="btn btn-p btn-full" onclick="buscarLote()">Buscar lote</button></div></div>`;
+
+  if(!loteBuscado) return html + `<div class="vacio"><b>Ingrese un lote</b>También puede entrar desde Control de proceso y pulsar "Ver trazabilidad" en cualquier lote.</div>`;
+
+  const P = D.produccion.find(r=>r.lote.toUpperCase()===loteBuscado.toUpperCase());
+  if(!P) return html + `<div class="vacio"><b>Lote no encontrado</b>Verifique el código impreso. Los lotes se generan al cerrar una corrida en Control de proceso.</div>`;
+
+  const mp = D.mp.find(r=>r.id===P.mpId);
+  const ins = D.insumo.find(r=>r.id===P.insId);
+  const pre = D.preop.filter(r=>r.fecha===P.fecha);
+  const hig = D.higiene.filter(r=>r.fecha===P.fecha);
+  const lim = D.ld.filter(r=>r.fecha===P.fecha);
+  const ag = D.agua.filter(r=>r.fecha===P.fecha);
+  const ncs = D.nc.filter(n=>n.lote && n.lote.toUpperCase()===P.lote.toUpperCase());
+
+  const lin = (a,b)=>`<div class="lin"><b>${a}</b><span>${esc(b??'—')}</span></div>`;
+
+  html += `<div class="saco">
+    <div style="margin-bottom:12px"><span class="estampa">${esc(P.lote)}</span></div>
+    ${lin('Presentación', P.presentacion)}
+    ${lin('Fecha de empaque', `${fmtF(P.fecha)} · ${P.ini||''}–${P.fin||''}`)}
+    ${lin('Turno', P.turno)}
+    ${lin('Unidades', P.unidades)}
+    ${lin('Peso promedio', `${P.pesoProm} g (nominal ${P.nominal} g ±${P.tol}%)`)}
+    ${lin('Muestras fuera de tolerancia', P.fueraTol)}
+    ${lin('Sellado', P.sellado)}
+    ${lin('Codificado', P.codificado)}
+    ${lin('Responsable', P.resp)}
+  </div>
+
+  <div class="rotulo">Origen del arroz</div>
+  <div class="panel" style="margin-bottom:14px">
+    ${mp ? `<div class="saco" style="margin:0">
+      ${lin('Proveedor', mp.proveedor)}${lin('Lote del proveedor', mp.loteProv)}
+      ${lin('Recibido', fmtF(mp.fecha))}${lin('Cantidad', (mp.kg||'?')+' kg')}
+      ${lin('Humedad', (mp.humedad||'—')+' %')}${lin('Impurezas', (mp.impurezas||'—')+' %')}
+      ${lin('Sensorial', mp.sensorial)}${lin('Vehículo', `${mp.placa||'—'} · ${mp.vehiculo||''}`)}
+      ${lin('Decisión', mp.decision)}${lin('Remisión', mp.remision)}</div>`
+    : `<div class="alerta rojo"><span>⛔</span><div><b>Sin trazabilidad hacia atrás</b><br>
+       Este lote no tiene recepción de arroz asociada. Es un hallazgo grave en auditoría.</div></div>`}
+  </div>
+
+  <div class="rotulo">Material de empaque</div>
+  <div class="panel" style="margin-bottom:14px">
+    ${ins ? `<div class="saco" style="margin:0">
+      ${lin('Proveedor', ins.proveedor)}${lin('Lote de bolsa', ins.loteBolsa)}
+      ${lin('Referencia', ins.referencia)}
+      ${lin('Certificado aptitud', `${ins.certNum||'sin número'} · vence ${ins.certVence?fmtF(ins.certVence):'sin dato'}`)}
+      ${lin('Rótulo', ins.rotulo)}${lin('Decisión', ins.decision)}</div>`
+    : `<div class="alerta ambar"><span>⏳</span><div><b>Sin insumo asociado</b><br>
+       No se registró el lote de bolsa usado en esta corrida.</div></div>`}
+  </div>
+
+  <div class="rotulo">Condiciones de la planta ese día</div>
+  <div class="panel">
+    <div class="saco" style="margin:0">
+      ${lin('Alistamiento pre-operacional', pre.length ? `${pre.length} registro(s) · ${resumenChk(pre[0].items).n} NC` : 'SIN REGISTRO')}
+      ${lin('Higiene del personal', hig.length ? `${hig.length} persona(s) verificada(s)` : 'SIN REGISTRO')}
+      ${lin('Limpieza y desinfección', lim.length ? `${lim.length} área(s): ${lim.map(x=>x.area).join(', ')}` : 'SIN REGISTRO')}
+      ${lin('Agua potable', ag.length ? ag.map(x=>`${x.cloro} mg/L`).join(' · ') : 'SIN REGISTRO')}
+      ${lin('No conformidades del lote', ncs.length ? ncs.map(n=>`${n.cod} (${n.estado})`).join(', ') : 'Ninguna')}
+    </div>
+    ${hig.length ? `<div style="margin-top:12px;font-size:13px;color:var(--tinta-2)">
+      <b style="font-family:var(--cond);text-transform:uppercase;letter-spacing:.07em;font-size:12.5px">Personal del turno</b><br>
+      ${hig.map(h=>{const m=D.manipuladores.find(x=>x.id===h.manipId); return esc(m?m.nombre:'(no identificado)');}).join(' · ')}
+    </div>`:''}
+  </div>
+  <div class="acciones no-print"><button class="btn btn-s" onclick="window.print()">Imprimir ficha del lote</button></div>`;
+  return html;
+}
+function buscarLote(){ loteBuscado = val('f_busca').trim(); pintar(); }
+function verTraza(l){ loteBuscado = l; ir('traza'); }
+
+/* ============================================================
+   13. REPORTES Y RESPALDO
+   ============================================================ */
+function vReportes(){
+  const total = ['preop','higiene','ld','plagas','agua','residuos','mp','insumo','produccion','nc']
+    .reduce((a,k)=>a+D[k].length,0);
+  return encabezado('Evidencia para el INVIMA',
+    'Exporte el respaldo completo o imprima el resumen. <b>Haga el respaldo cada semana</b>: los datos viven en este dispositivo, si se pierde el equipo se pierde el histórico.') +
+    `<div class="saco">
+      <div style="margin-bottom:12px"><span class="estampa">${total} REGISTROS</span></div>
+      ${Object.entries({preop:'Alistamiento',higiene:'Higiene del personal',ld:'Limpieza y desinfección',
+        plagas:'Control de plagas',agua:'Agua potable',residuos:'Residuos',mp:'Recepción de arroz',
+        insumo:'Insumo de empaque',produccion:'Lotes producidos',nc:'No conformidades',
+        manipuladores:'Manipuladores'}).map(([k,n])=>
+        `<div class="lin"><b>${n}</b><span>${D[k].length}</span></div>`).join('')}
+     </div>
+     <div class="acciones">
+       <button class="btn btn-p" onclick="exportar()">Descargar respaldo</button>
+       <button class="btn btn-s" onclick="document.getElementById('impFile').click()">Restaurar respaldo</button>
+       <button class="btn btn-s" onclick="exportarCSV()">Exportar lotes (CSV)</button>
+       <button class="btn btn-s" onclick="window.print()">Imprimir resumen</button>
+     </div>
+     <input type="file" id="impFile" accept="application/json" style="display:none" onchange="importar(this)">
+     </div>
+
+     <div class="rotulo">Qué le van a pedir en la visita</div>
+     <div class="panel">
+       <ol style="margin:0;padding-left:20px;font-size:14px;line-height:1.7;color:var(--tinta-2)">
+         <li>Plan de Saneamiento escrito, con sus cuatro programas y sus registros al día.</li>
+         <li>Certificados médicos de aptitud y soportes de capacitación continua del personal.</li>
+         <li>Certificado de aptitud sanitaria del material de empaque (Res. 683 de 2012).</li>
+         <li>Concepto sanitario vigente de la empresa que aplica el control de plagas, con fichas técnicas y hojas de seguridad.</li>
+         <li>Registros de calidad del agua y soporte de la desinfección del tanque.</li>
+         <li>Trazabilidad completa de un lote elegido al azar, hacia atrás y hacia adelante.</li>
+         <li>Rótulo del producto conforme a Res. 5109 de 2005 y Res. 810 de 2021.</li>
+         <li>Manejo del producto no conforme y sus acciones correctivas cerradas.</li>
+       </ol>
+     </div>
+
+     <div class="rotulo">Simulacro de retiro de producto</div>
+     <div class="panel">
+       <p class="nota" style="margin-bottom:10px">Se recomienda hacer un simulacro al menos una vez al año: escoja un lote, y en menos de cuatro horas debe poder decir de qué arroz salió, cuántas unidades se hicieron y a qué clientes se despachó. Deje el ejercicio documentado como no conformidad tipo "auditoría interna" si encuentra vacíos.</p>
+       <button class="btn btn-s" onclick="ir('traza')">Ir a Trazabilidad</button>
+     </div>`;
+}
+function exportar(){
+  const b = new Blob([JSON.stringify(D,null,2)],{type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(b);
+  a.download = `respaldo-bpm-arroz-${hoy()}.json`;
+  a.click(); URL.revokeObjectURL(a.href);
+  aviso('Respaldo descargado');
+}
+function importar(inp){
+  const f = inp.files[0]; if(!f) return;
+  const r = new FileReader();
+  r.onload = e=>{
+    try{
+      const nuevo = JSON.parse(e.target.result);
+      if(!nuevo.cfg) throw new Error('formato');
+      if(!confirm('Esto reemplaza todos los registros actuales. ¿Continuar?')) return;
+      D = Object.assign(JSON.parse(JSON.stringify(BASE)), nuevo);
+      salvar(); ir('inicio'); aviso('Respaldo restaurado');
+    }catch(err){ aviso('El archivo no es un respaldo válido'); }
+  };
+  r.readAsText(f); inp.value='';
+}
+function exportarCSV(){
+  const cab = ['Lote','Fecha','Turno','Presentacion','Unidades','PesoPromedio','FueraTolerancia',
+    'ProveedorArroz','LoteArroz','ProveedorBolsa','LoteBolsa','Sellado','Codificado','Responsable'];
+  const filas = D.produccion.map(p=>{
+    const mp = D.mp.find(r=>r.id===p.mpId)||{}, ins = D.insumo.find(r=>r.id===p.insId)||{};
+    return [p.lote,p.fecha,p.turno,p.presentacion,p.unidades,p.pesoProm,p.fueraTol,
+      mp.proveedor,mp.loteProv,ins.proveedor,ins.loteBolsa,p.sellado,p.codificado,p.resp]
+      .map(v=>`"${String(v??'').replace(/"/g,'""')}"`).join(',');
+  });
+  const b = new Blob(['\uFEFF'+cab.join(',')+'\n'+filas.join('\n')],{type:'text/csv;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(b); a.download = `lotes-arroz-${hoy()}.csv`; a.click();
+  URL.revokeObjectURL(a.href); aviso('CSV descargado');
+}
+
+/* ============================================================
+   14. CONFIGURACIÓN
+   ============================================================ */
+function vConfig(){
+  return encabezado('Configuración de la planta',
+    'Estos datos aparecen en los reportes impresos. Las presentaciones definen el peso nominal y la tolerancia contra la que se evalúa cada muestreo.') +
+    `<div class="dos">
+      <div class="campo"><label>Razón social</label><input id="c_emp" value="${esc(D.cfg.empresa)}"></div>
+      <div class="campo"><label>NIT</label><input id="c_nit" value="${esc(D.cfg.nit)}"></div>
+     </div>
+     <div class="dos">
+      <div class="campo"><label>Nombre de la planta</label><input id="c_pl" value="${esc(D.cfg.planta)}" placeholder="Ej.: Empacadora Caucasia"></div>
+      <div class="campo"><label>Marca del producto</label><input id="c_ma" value="${esc(D.cfg.marca)}"></div>
+     </div>
+     <div class="campo"><label>Responsable de calidad</label><input id="c_re" value="${esc(D.cfg.responsable)}"></div>
+     <div class="acciones"><button class="btn btn-p" onclick="guardarCfg()">Guardar datos</button></div></div>
+
+     <div class="rotulo">Presentaciones y tolerancia de peso</div>
+     <div class="panel">
+       ${D.cfg.presentaciones.map((p,i)=>`
+        <div class="dos" style="align-items:end;margin-bottom:6px">
+          <div class="campo" style="margin-bottom:6px"><label>Presentación ${i+1}</label>
+            <input id="p_n${i}" value="${esc(p.nombre)}"></div>
+          <div class="dos" style="gap:8px">
+            <div class="campo" style="margin-bottom:6px"><label>Gramos</label>
+              <input type="number" id="p_g${i}" value="${p.gramos}"></div>
+            <div class="campo" style="margin-bottom:6px"><label>Tol. %</label>
+              <input type="number" step="0.1" id="p_t${i}" value="${p.tol}"></div>
+          </div>
+        </div>`).join('')}
+       <div class="acciones">
+         <button class="btn btn-p" onclick="guardarPres()">Guardar presentaciones</button>
+         <button class="btn btn-s" onclick="agregarPres()">Agregar otra</button>
+       </div>
+     </div>
+
+     <div class="rotulo">Zona de riesgo</div>
+     <div class="panel">
+       <p class="nota">Borrar todo elimina los registros de este dispositivo de forma permanente. Descargue primero el respaldo.</p>
+       <div class="acciones">
+         <button class="btn btn-s" onclick="exportar()">Descargar respaldo</button>
+         <button class="btn btn-d" onclick="borrarTodo()">Borrar todos los datos</button>
+       </div>
+     </div>`;
+}
+function guardarCfg(){
+  D.cfg.empresa=val('c_emp'); D.cfg.nit=val('c_nit'); D.cfg.planta=val('c_pl');
+  D.cfg.marca=val('c_ma'); D.cfg.responsable=val('c_re');
+  salvar(); pintar(); aviso('Datos guardados');
+}
+function guardarPres(){
+  D.cfg.presentaciones = D.cfg.presentaciones.map((p,i)=>({
+    nombre: val('p_n'+i)||p.nombre,
+    gramos: parseFloat(val('p_g'+i))||p.gramos,
+    tol: parseFloat(val('p_t'+i))||p.tol }));
+  salvar(); ir('config'); aviso('Presentaciones guardadas');
+}
+function agregarPres(){
+  D.cfg.presentaciones.push({nombre:'Nueva presentación', gramos:1000, tol:1.5});
+  salvar(); ir('config');
+}
+function borrarTodo(){
+  if(!confirm('Se eliminarán TODOS los registros de este dispositivo. ¿Está seguro?')) return;
+  if(!confirm('Confirme otra vez: esta acción no se puede deshacer.')) return;
+  D = JSON.parse(JSON.stringify(BASE)); salvar(); ir('inicio'); aviso('Datos eliminados');
+}
+
+/* ============================================================
+   ARRANQUE
+   ============================================================ */
+cargar();
+pintar();
+setInterval(()=>{ if(vista==='inicio') pintar(); }, 60000);
+
+if('serviceWorker' in navigator){
+  window.addEventListener('load', ()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+}
+</script>
+</body>
+</html>
